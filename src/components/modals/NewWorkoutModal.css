@@ -1,0 +1,68 @@
+﻿.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.form-input,
+.form-textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.muscle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.muscle-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.muscle-chip:hover {
+  border-color: var(--accent3);
+  color: var(--accent3);
+}
+
+.muscle-chip.selected {
+  border-color: var(--accent3);
+  color: var(--accent3);
+  background: rgba(71, 200, 255, 0.06);
+}
+
+@media (max-width: 768px) {
+  .muscle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
