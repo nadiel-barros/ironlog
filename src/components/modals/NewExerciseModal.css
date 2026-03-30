@@ -31,6 +31,10 @@
   border-color: var(--accent);
 }
 
+.form-select {
+  cursor: pointer;
+}
+
 .chips-grid {
   display: flex;
   flex-wrap: wrap;
@@ -58,6 +62,22 @@
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(232, 255, 71, 0.06);
+}
+
+.chip-readonly {
+  cursor: default;
+  pointer-events: none;
+}
+
+.chip-placeholder {
+  color: var(--muted2);
+  border-style: dashed;
+}
+
+.form-error {
+  font-size: 0.75rem;
+  color: #ff7b7b;
+  font-family: var(--font-mono);
 }
 
 .number-input-row {

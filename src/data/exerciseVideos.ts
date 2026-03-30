@@ -20,6 +20,28 @@ const DEFAULT_VIDEO_ID = 'UHa9U-O09_U'
 const EXERCISE_ALIASES: Record<string, string[]> = {
   'Supino Reto': ['Bench Press'],
   'Supino Inclinado': ['Incline Bench Press'],
+  'Supino Vertical': ['Supino Maquina'],
+  'Cross Over (Peito)': ['Crossover', 'Cross Over'],
+  'Cross Over (Gluteo)': ['Cross Over Gluteo'],
+  'Pull Over': ['Pullover'],
+  'Triceps Corda': ['Corda Triceps'],
+  Paralela: ['Paralelas'],
+  'Rosca Simultanea 45': ['Rosca Simultanea 45 graus'],
+  'Rosca Martelo no Cross': ['Rosca Martelo Cross', 'Rosca Martelo Closs'],
+  'Rosca Tipica no Cross': ['Tipica Cross', 'Tipica Closs'],
+  'Leg Press (Quadriceps)': ['Leg Press', 'Leg Press 45'],
+  'Leg Press (Panturrilha)': ['Panturrilha no Leg Press'],
+  'Abdominal Reto': ['Reto'],
+  'Abdominal Obliquo': ['Obliquo'],
+  'Abdominal Infra Solo': ['Infra Solo'],
+  'Pulley Frontal': ['Puxada Frente', 'Pulldown na Polia'],
+  'Pulley Inverso': ['Puxada Triangulo'],
+  'Remada Maquina': ['Remada Maq'],
+  'Graviton Cavalinho': ['Remada Cavalinho'],
+  'Desenvolvimento Smith Frente': ['Desenvolvimento no Smith'],
+  'Desenvolvimento Halter': ['Desenvolvimento com Halteres'],
+  'Cadeira Abdutora': ['Abducao de Quadril'],
+  'Aducao Tornozeleira': ['Adutor na Polia'],
   'Triceps Pulley': ['Triceps Pushdown'],
   'Mergulho Triceps': ['Bench Dips', 'Dips'],
   'Barra Fixa': ['Pull Up'],
@@ -32,6 +54,49 @@ const EXERCISE_ALIASES: Record<string, string[]> = {
   'Cadeira Flexora': ['Mesa Flexora'],
   'Levantamento Terra Romeno': ['Romanian Deadlift'],
   'Elevacao Y': ['Elevacao Y Raise'],
+}
+
+const EXERCISE_OVERRIDE_CANDIDATES: Record<string, string[]> = {
+  'Rosca Simultanea 45': ['Rosca Simultanea 45 graus'],
+  'Rosca Martelo no Cross': ['Rosca Martelo', 'Rosca Martelo Cross', 'Rosca Martelo Closs'],
+  'Rosca Tipica no Cross': ['Tipica Cross', 'Tipica Closs'],
+  Paralela: ['Mergulho Triceps', 'Paralelas para Peito'],
+  'Gluteo Maquina': ['Glute Bridge', 'Hip Thrust'],
+  'Cross Over (Gluteo)': ['Cross Over Gluteo'],
+  'Coice com Tornozeleira': ['Coice na Polia'],
+  'Cadeira Abdutora': ['Abducao de Quadril'],
+  'Elevacao de Quadril': ['Hip Thrust', 'Glute Bridge'],
+  'Rosca Punho': ['Rosca de Punho'],
+  Encolhimento: ['Encolhimento com Barra', 'Encolhimento com Halteres'],
+  Agachamento: ['Agachamento Livre'],
+  'Agachamento Maquina': ['Agachamento Frontal'],
+  'Avanco Passada': ['Passada'],
+  'Aducao Tornozeleira': ['Adutor na Polia'],
+  'Abdominal Reto': ['Abdominal Supra', 'Crunch'],
+  'Abdominal Obliquo': ['Abdominal Bicicleta'],
+  'Abdominal Infra Solo': ['Abdominal Infra', 'Crunch Invertido'],
+  'Flexor em Pe': ['Cadeira Flexora'],
+  'Flexor com Halter': ['Levantamento Terra Romeno'],
+  'Bom Dia': ['Good Morning'],
+  'Leg Press (Quadriceps)': ['Leg Press 45'],
+  'Leg Press (Panturrilha)': ['Panturrilha no Leg Press'],
+  'Pulley Frontal': ['Puxada Frente', 'Pulldown na Polia'],
+  'Pulley Inverso': ['Puxada Triangulo'],
+  'Remada Maquina': ['Remada Unilateral'],
+  'Remada Articulada': ['Remada Alta no Cabo'],
+  'Graviton Cavalinho': ['Remada Cavalinho'],
+  'Remo Reto': ['Remada Alta'],
+  'Desenvolvimento Smith Frente': ['Desenvolvimento no Smith'],
+  'Desenvolvimento Articulado': ['Desenvolvimento Militar'],
+  'Desenvolvimento Halter': ['Desenvolvimento com Halteres'],
+  'Elevacao Frontal Cabo': ['Elevacao Frontal'],
+  'Elevacao Lateral Cabo': ['Elevacao Lateral'],
+  'Posterior Maquina': ['Crucifixo Inverso'],
+  'Supino Vertical': ['Supino com Halteres'],
+  'Fly Reto': ['Crucifixo'],
+  'Cross Over (Peito)': ['Crossover'],
+  'Pull Over': ['Pullover'],
+  Voador: ['Peck Deck'],
 }
 
 const EXERCISE_VIDEO_OVERRIDES: Record<string, ExerciseVideoOverride> = {
@@ -198,8 +263,28 @@ const createVideoReference = (
   }
 }
 
+const getExerciseVideoOverride = (exerciseName: string): ExerciseVideoOverride | undefined => {
+  const overrideCandidates = [exerciseName, ...(EXERCISE_OVERRIDE_CANDIDATES[exerciseName] ?? [])]
+
+  for (const candidate of overrideCandidates) {
+    const override = EXERCISE_VIDEO_OVERRIDES[candidate]
+    if (override) {
+      return {
+        youtubeUrl: override.youtubeUrl,
+        aliases: [...(EXERCISE_ALIASES[exerciseName] ?? []), ...(override.aliases ?? [])],
+      }
+    }
+  }
+
+  if (EXERCISE_ALIASES[exerciseName]) {
+    return { aliases: EXERCISE_ALIASES[exerciseName] }
+  }
+
+  return undefined
+}
+
 export const EXERCISE_VIDEO_LIBRARY: ExerciseVideoReference[] = ALL_EXERCISES.map((exerciseName) => {
-  const override = EXERCISE_VIDEO_OVERRIDES[exerciseName]
+  const override = getExerciseVideoOverride(exerciseName)
 
   return createVideoReference(
     exerciseName,

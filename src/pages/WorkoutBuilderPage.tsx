@@ -19,6 +19,15 @@ type EditingExerciseState = {
   exercise: Exercise
 } | null
 
+const normalizeExerciseName = (value: string): string =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
 const createInitialWorkoutBuilderState = (): WorkoutBuilderState => {
   const savedState = loadWorkoutBuilderState()
   if (savedState) {
@@ -75,8 +84,6 @@ export function WorkoutBuilderPage() {
     [builderState.workouts],
   )
 
-  const preselectedMuscle = activeWorkout?.muscles.length === 1 ? activeWorkout.muscles[0] : ''
-
   const handleCreateWorkout = (input: CreateWorkoutInput) => {
     dispatch({
       type: 'CREATE_WORKOUT',
@@ -97,9 +104,19 @@ export function WorkoutBuilderPage() {
     })
   }
 
-  const handleAddExercise = (input: CreateExerciseInput) => {
+  const handleAddExercise = (input: CreateExerciseInput): string | null => {
     if (!builderState.activeWorkoutId) {
-      return
+      return 'Selecione um treino antes de adicionar exercicio.'
+    }
+
+    const workout = builderState.workouts.find((item) => item.id === builderState.activeWorkoutId)
+    const normalizedInputName = normalizeExerciseName(input.name)
+    const hasDuplicate = workout?.exercises.some(
+      (exercise) => normalizeExerciseName(exercise.name) === normalizedInputName,
+    )
+
+    if (hasDuplicate) {
+      return 'Este exercicio ja foi adicionado neste treino.'
     }
 
     dispatch({
@@ -109,11 +126,25 @@ export function WorkoutBuilderPage() {
     })
 
     setIsNewExerciseModalOpen(false)
+
+    return null
   }
 
-  const handleUpdateExercise = (input: CreateExerciseInput) => {
+  const handleUpdateExercise = (input: CreateExerciseInput): string | null => {
     if (!editingExerciseState) {
-      return
+      return 'Exercicio invalido para edicao.'
+    }
+
+    const workout = builderState.workouts.find((item) => item.id === editingExerciseState.workoutId)
+    const normalizedInputName = normalizeExerciseName(input.name)
+    const hasDuplicate = workout?.exercises.some(
+      (exercise) =>
+        exercise.id !== editingExerciseState.exercise.id &&
+        normalizeExerciseName(exercise.name) === normalizedInputName,
+    )
+
+    if (hasDuplicate) {
+      return 'Ja existe outro exercicio com esse nome neste treino.'
     }
 
     dispatch({
@@ -123,6 +154,8 @@ export function WorkoutBuilderPage() {
       input,
     })
     setEditingExerciseState(null)
+
+    return null
   }
 
   const handleStartEditExercise = (workoutId: string, exercise: Exercise) => {
@@ -194,8 +227,6 @@ export function WorkoutBuilderPage() {
       {isNewExerciseModalOpen ? (
         <NewExerciseModal
           onClose={() => setIsNewExerciseModalOpen(false)}
-          preselectedMuscle={preselectedMuscle}
-          muscles={MUSCLES}
           equipments={EQUIPMENTS}
           restOptions={REST_OPTIONS}
           onSubmitExercise={handleAddExercise}
@@ -205,8 +236,6 @@ export function WorkoutBuilderPage() {
       {editingExerciseState ? (
         <NewExerciseModal
           onClose={() => setEditingExerciseState(null)}
-          preselectedMuscle={editingExerciseState.exercise.muscle}
-          muscles={MUSCLES}
           equipments={EQUIPMENTS}
           restOptions={REST_OPTIONS}
           onSubmitExercise={handleUpdateExercise}

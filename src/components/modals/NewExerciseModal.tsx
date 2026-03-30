@@ -1,24 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ALL_EXERCISES, EXERCISE_GROUPS } from '../../data/exerciseCatalog'
+import { ALL_EXERCISES, resolveExerciseCatalogEntry } from '../../data/exerciseCatalog'
 import { Modal } from '../common/Modal'
 import type { CreateExerciseInput } from '../../types/workout'
 import './NewExerciseModal.css'
 
 type NewExerciseModalProps = {
   onClose: () => void
-  preselectedMuscle: string
-  muscles: string[]
   equipments: string[]
   restOptions: number[]
-  onSubmitExercise: (input: CreateExerciseInput) => void
+  onSubmitExercise: (input: CreateExerciseInput) => string | null
   title?: string
   submitLabel?: string
   initialForm?: CreateExerciseInput
 }
 
-const getInitialForm = (muscle = ''): CreateExerciseInput => ({
+const getInitialForm = (): CreateExerciseInput => ({
   name: '',
-  muscle,
+  muscle: '',
   equip: '',
   sets: 4,
   reps: 12,
@@ -63,8 +61,6 @@ const parseAndClamp = (
 
 export function NewExerciseModal({
   onClose,
-  preselectedMuscle,
-  muscles,
   equipments,
   restOptions,
   onSubmitExercise,
@@ -72,18 +68,25 @@ export function NewExerciseModal({
   submitLabel = 'ADICIONAR',
   initialForm,
 }: NewExerciseModalProps) {
-  const [form, setForm] = useState<CreateExerciseInput>(
-    () => initialForm ?? getInitialForm(preselectedMuscle),
-  )
-  const inputRef = useRef<HTMLInputElement>(null)
-  const exerciseNameSuggestions = useMemo(() => {
-    if (!form.muscle) {
-      return ALL_EXERCISES
-    }
+  const resolveInput = (input: CreateExerciseInput): CreateExerciseInput => {
+    const resolved = resolveExerciseCatalogEntry(input.name)
 
-    const selectedGroup = EXERCISE_GROUPS.find((group) => group.muscle === form.muscle)
-    return selectedGroup?.exercises ?? ALL_EXERCISES
-  }, [form.muscle])
+    return {
+      ...input,
+      name: resolved?.exerciseName ?? '',
+      muscle: resolved?.muscle ?? input.muscle.trim(),
+    }
+  }
+
+  const [form, setForm] = useState<CreateExerciseInput>(
+    () => resolveInput(initialForm ?? getInitialForm()),
+  )
+  const inputRef = useRef<HTMLSelectElement>(null)
+  const [nameError, setNameError] = useState('')
+  const exerciseOptions = useMemo(() => {
+    const collator = new Intl.Collator('pt-BR', { sensitivity: 'base' })
+    return [...ALL_EXERCISES].sort((left, right) => collator.compare(left, right))
+  }, [])
 
   useEffect(() => {
     const timer = window.setTimeout(() => inputRef.current?.focus(), 0)
@@ -91,22 +94,31 @@ export function NewExerciseModal({
   }, [])
 
   const handleSubmit = () => {
-    const trimmedName = form.name.trim()
+    const resolved = resolveExerciseCatalogEntry(form.name)
 
-    if (!trimmedName) {
+    if (!resolved) {
+      setNameError('Selecione um exercicio valido da lista.')
       inputRef.current?.focus()
       return
     }
 
-    onSubmitExercise({
+    setNameError('')
+
+    const submitError = onSubmitExercise({
       ...form,
-      name: trimmedName,
+      name: resolved.exerciseName,
+      muscle: resolved.muscle,
       sets: clamp(Math.round(form.sets), 1, 20),
       reps: clamp(Math.round(form.reps), 1, 100),
       weight: clamp(form.weight, 0, 10000),
       rest: clamp(Math.round(form.rest), 0, 1800),
       notes: form.notes.trim(),
     })
+
+    if (submitError) {
+      setNameError(submitError)
+      return
+    }
   }
 
   return (
@@ -125,38 +137,44 @@ export function NewExerciseModal({
       }
     >
       <div className="form-group">
-        <label className="form-label" htmlFor="exerciseNameInput">
+        <label className="form-label" htmlFor="exerciseNameSelect">
           Nome do Exercicio
         </label>
-        <input
-          id="exerciseNameInput"
+        <select
+          id="exerciseNameSelect"
           ref={inputRef}
-          className="form-input"
-          placeholder="Ex: Supino Reto, Rosca Direta..."
-          list="exerciseNameSuggestions"
+          className="form-input form-select"
           value={form.name}
-          onChange={(event) => setForm((previous) => ({ ...previous, name: event.target.value }))}
-        />
-        <datalist id="exerciseNameSuggestions">
-          {exerciseNameSuggestions.map((exerciseName) => (
-            <option key={exerciseName} value={exerciseName} />
+          onChange={(event) => {
+            const selectedName = event.target.value
+            const resolved = resolveExerciseCatalogEntry(selectedName)
+
+            setNameError('')
+            setForm((previous) => ({
+              ...previous,
+              name: resolved?.exerciseName ?? '',
+              muscle: resolved?.muscle ?? '',
+            }))
+          }}
+        >
+          <option value="" disabled>
+            Selecione um exercicio da lista
+          </option>
+          {exerciseOptions.map((exerciseName) => (
+            <option key={exerciseName} value={exerciseName}>
+              {exerciseName}
+            </option>
           ))}
-        </datalist>
+        </select>
+        {nameError ? <span className="form-error">{nameError}</span> : null}
       </div>
 
       <div className="form-group">
         <div className="form-label">Grupo Muscular</div>
         <div className="chips-grid">
-          {muscles.map((muscle) => (
-            <button
-              key={muscle}
-              type="button"
-              className={`chip ${form.muscle === muscle ? 'selected' : ''}`}
-              onClick={() => setForm((previous) => ({ ...previous, muscle }))}
-            >
-              {muscle}
-            </button>
-          ))}
+          <span className={`chip selected chip-readonly ${form.muscle ? '' : 'chip-placeholder'}`}>
+            {form.muscle || 'Selecionado automaticamente'}
+          </span>
         </div>
       </div>
 
@@ -286,6 +304,3 @@ export function NewExerciseModal({
     </Modal>
   )
 }
-
-
-

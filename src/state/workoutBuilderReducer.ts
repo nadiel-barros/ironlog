@@ -1,4 +1,5 @@
 import type { CreateExerciseInput, CreateWorkoutInput, Exercise, Workout } from '../types/workout'
+import { resolveExerciseCatalogEntry } from '../data/exerciseCatalog'
 import { getNextLetter, uid } from '../utils/workout'
 
 export type WorkoutBuilderState = {
@@ -72,16 +73,29 @@ const clamp = (value: number, min: number, max: number): number => {
   return Math.min(max, Math.max(min, value))
 }
 
-const sanitizeExerciseInput = (input: CreateExerciseInput): CreateExerciseInput => ({
-  name: input.name.trim(),
-  muscle: input.muscle.trim(),
-  equip: input.equip.trim(),
-  sets: clamp(Math.round(input.sets), 1, 20),
-  reps: clamp(Math.round(input.reps), 1, 100),
-  weight: clamp(input.weight, 0, 10000),
-  rest: clamp(Math.round(input.rest), 0, 1800),
-  notes: input.notes.trim(),
-})
+const normalizeExerciseName = (value: string): string =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const sanitizeExerciseInput = (input: CreateExerciseInput): CreateExerciseInput => {
+  const resolvedEntry = resolveExerciseCatalogEntry(input.name)
+
+  return {
+    name: resolvedEntry?.exerciseName ?? input.name.trim(),
+    muscle: resolvedEntry?.muscle ?? input.muscle.trim(),
+    equip: input.equip.trim(),
+    sets: clamp(Math.round(input.sets), 1, 20),
+    reps: clamp(Math.round(input.reps), 1, 100),
+    weight: clamp(input.weight, 0, 10000),
+    rest: clamp(Math.round(input.rest), 0, 1800),
+    notes: input.notes.trim(),
+  }
+}
 
 const buildExerciseFromInput = (input: CreateExerciseInput): Exercise => {
   const safeInput = sanitizeExerciseInput(input)
@@ -151,6 +165,15 @@ export const workoutBuilderReducer = (
             return workout
           }
 
+          const incomingName = normalizeExerciseName(safeExercise.name)
+          const alreadyExists = workout.exercises.some(
+            (exercise) => normalizeExerciseName(exercise.name) === incomingName,
+          )
+
+          if (alreadyExists) {
+            return workout
+          }
+
           return {
             ...workout,
             exercises: [...workout.exercises, safeExercise],
@@ -166,6 +189,17 @@ export const workoutBuilderReducer = (
         ...state,
         workouts: state.workouts.map((workout) => {
           if (workout.id !== action.workoutId) {
+            return workout
+          }
+
+          const incomingName = normalizeExerciseName(safeInput.name)
+          const hasDuplicateTarget = workout.exercises.some(
+            (exercise) =>
+              exercise.id !== action.exerciseId &&
+              normalizeExerciseName(exercise.name) === incomingName,
+          )
+
+          if (hasDuplicateTarget) {
             return workout
           }
 

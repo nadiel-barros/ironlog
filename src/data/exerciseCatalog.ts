@@ -7,46 +7,12 @@ export const EXERCISE_GROUPS: ExerciseGroup[] = [
   {
     muscle: 'Biceps',
     exercises: [
-      'Rosca Direta',
       'Rosca Alternada',
-      'Rosca Martelo',
+      'Rosca Simultanea 45',
       'Rosca Scott',
       'Rosca Concentrada',
-      'Rosca Inversa',
-      'Rosca 21',
-      'Rosca no Cabo',
-      'Rosca Bayesian',
-      'Rosca Spider',
-    ],
-  },
-  {
-    muscle: 'Antebraco',
-    exercises: [
-      'Rosca de Punho',
-      'Rosca de Punho Inversa',
-      'Farmer Walk',
-      'Pronacao de Punho',
-      'Supinacao de Punho',
-      'Hang na Barra',
-      'Wrist Roller',
-      'Pinch Grip Hold',
-    ],
-  },
-  {
-    muscle: 'Abdomen',
-    exercises: [
-      'Crunch',
-      'Crunch Invertido',
-      'Abdominal Infra',
-      'Abdominal Supra',
-      'Abdominal Bicicleta',
-      'Prancha',
-      'Prancha Lateral',
-      'Elevacao de Pernas',
-      'Abdominal na Polia',
-      'Roda Abdominal',
-      'Dead Bug',
-      'Mountain Climber',
+      'Rosca Martelo no Cross',
+      'Rosca Tipica no Cross',
     ],
   },
   {
@@ -54,147 +20,208 @@ export const EXERCISE_GROUPS: ExerciseGroup[] = [
     exercises: [
       'Triceps Pulley',
       'Triceps Corda',
-      'Triceps Frances',
       'Triceps Testa',
+      'Triceps Frances',
       'Triceps Coice',
-      'Triceps Banco',
-      'Mergulho Triceps',
       'Supino Fechado',
-      'Extensao Acima da Cabeca',
-      'Triceps Unilateral na Polia',
-    ],
-  },
-  {
-    muscle: 'Trapezio',
-    exercises: [
-      'Encolhimento com Barra',
-      'Encolhimento com Halteres',
-      'Remada Alta',
-      'Remada Alta no Cabo',
-      'Face Pull',
-      'Levantamento Terra',
-      'Farmer Walk Pesado',
-    ],
-  },
-  {
-    muscle: 'Quadriceps',
-    exercises: [
-      'Agachamento Livre',
-      'Agachamento Frontal',
-      'Agachamento Hack',
-      'Leg Press 45',
-      'Cadeira Extensora',
-      'Extensora',
-      'Avanco',
-      'Passada',
-      'Bulgarian Split Squat',
-      'Sissy Squat',
-      'Step Up',
-    ],
-  },
-  {
-    muscle: 'Posterior Coxa',
-    exercises: [
-      'Stiff',
-      'Levantamento Terra Romeno',
-      'Mesa Flexora',
-      'Cadeira Flexora',
-      'Good Morning',
-      'Glute Ham Raise',
-      'Nordic Curl',
-      'Kettlebell Swing',
+      'Paralela',
     ],
   },
   {
     muscle: 'Gluteo',
     exercises: [
-      'Hip Thrust',
-      'Glute Bridge',
-      'Coice na Polia',
-      'Abducao de Quadril',
-      'Agachamento Sumo',
-      'Terra Sumo',
-      'Passada Reversa',
-      'Step Up Alto',
-      'Ponte Unilateral',
+      'Gluteo Maquina',
+      'Cross Over (Gluteo)',
+      'Coice com Tornozeleira',
+      'Cadeira Abdutora',
+      'Graviton',
+      'Apolete',
+      'Elevacao de Quadril',
+    ],
+  },
+  {
+    muscle: 'Antebraco',
+    exercises: ['Rosca Punho', 'Rosca Inversa'],
+  },
+  {
+    muscle: 'Trapezio',
+    exercises: ['Remada Alta', 'Encolhimento'],
+  },
+  {
+    muscle: 'Quadriceps',
+    exercises: [
+      'Cadeira Extensora',
+      'Leg Press (Quadriceps)',
+      'Agachamento',
+      'Agachamento Hack',
+      'Agachamento Maquina',
+      'Avanco',
+      'Avanco Passada',
     ],
   },
   {
     muscle: 'Adutores',
+    exercises: ['Cadeira Adutora', 'Aducao Tornozeleira', 'Terra Sumo'],
+  },
+  {
+    muscle: 'Abdomen',
+    exercises: ['Abdominal Reto', 'Abdominal Obliquo', 'Abdominal Infra Solo', 'Cintura', 'Prancha'],
+  },
+  {
+    muscle: 'Posterior Coxa',
     exercises: [
-      'Cadeira Adutora',
-      'Adutor na Polia',
-      'Agachamento Sumo',
-      'Terra Sumo',
-      'Avanco Lateral',
-      'Deslizamento Lateral',
+      'Cadeira Flexora',
+      'Mesa Flexora',
+      'Flexor em Pe',
+      'Flexor com Halter',
+      'Stiff',
+      'Bom Dia',
+      'Les Ado',
     ],
   },
   {
     muscle: 'Panturrilha',
-    exercises: [
-      'Panturrilha em Pe',
-      'Panturrilha Sentado',
-      'Panturrilha no Leg Press',
-      'Panturrilha Unilateral',
-      'Donkey Calf Raise',
-      'Panturrilha no Smith',
-    ],
+    exercises: ['Leg Press (Panturrilha)', 'Panturrilha em Pe', 'Panturrilha Sentado'],
   },
   {
     muscle: 'Costas',
     exercises: [
-      'Barra Fixa',
-      'Puxada Frente',
-      'Puxada Triangulo',
-      'Pulldown na Polia',
-      'Remada Curvada',
-      'Remada Unilateral',
+      'Pulley Nuca',
+      'Pulley Frontal',
+      'Pulley Inverso',
       'Remada Baixa',
-      'Remada Cavalinho',
-      'Pullover na Polia',
-      'Levantamento Terra',
-      'Serrote',
-      'Pull Up',
-      'Chin Up',
-    ],
-  },
-  {
-    muscle: 'Peito',
-    exercises: [
-      'Supino Reto',
-      'Supino Inclinado',
-      'Supino Declinado',
-      'Supino com Halteres',
-      'Crucifixo',
-      'Crucifixo Inclinado',
-      'Crucifixo no Cabo',
-      'Crossover',
-      'Peck Deck',
-      'Flexao de Bracos',
-      'Pullover',
-      'Paralelas para Peito',
+      'Remada Maquina',
+      'Remada Articulada',
+      'Remada Unilateral',
+      'Barra Fixa',
+      'Remo Reto',
+      'Remada Curvada',
+      'Graviton Cavalinho',
+      'Lombar',
     ],
   },
   {
     muscle: 'Ombro',
     exercises: [
-      'Desenvolvimento Militar',
-      'Desenvolvimento com Halteres',
-      'Arnold Press',
-      'Elevacao Lateral',
+      'Desenvolvimento Smith Frente',
+      'Desenvolvimento Articulado',
+      'Desenvolvimento Halter',
       'Elevacao Frontal',
+      'Elevacao Frontal Cabo',
+      'Elevacao Lateral',
+      'Elevacao Lateral Cabo',
+      'Posterior Maquina',
       'Crucifixo Inverso',
-      'Face Pull',
-      'Remada Alta',
-      'Desenvolvimento no Smith',
-      'Elevacao Y',
+    ],
+  },
+  {
+    muscle: 'Peito',
+    exercises: [
+      'Supino Vertical',
+      'Supino Reto',
+      'Supino Inclinado',
+      'Supino Declinado',
+      'Fly Reto',
+      'Fly Inclinado',
+      'Crucifixo Reto',
+      'Crucifixo Inclinado',
+      'Peck Deck',
+      'Cross Over (Peito)',
+      'Pull Over',
+      'Voador',
+      'Manguito',
     ],
   },
 ]
 
-export const ALL_EXERCISES = Array.from(
-  new Set(EXERCISE_GROUPS.flatMap((group) => group.exercises)),
+export type ExerciseCatalogEntry = {
+  exerciseName: string
+  muscle: string
+}
+
+const normalizeExerciseName = (value: string): string =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const EXERCISE_NAME_ALIASES: Record<string, string[]> = {
+  'Rosca Simultanea 45': ['Rosca Simultanea 45 graus'],
+  'Rosca Martelo no Cross': ['Rosca Martelo Closs', 'Rosca Martelo Cross'],
+  'Rosca Tipica no Cross': ['Tipica Closs', 'Tipica Cross', 'Rosca Tipica Cross'],
+  'Triceps Pulley': ['Pulley'],
+  'Triceps Corda': ['Corda'],
+  'Triceps Testa': ['Testa'],
+  'Triceps Frances': ['Frances'],
+  'Triceps Coice': ['Coice'],
+  Paralela: ['Paralelas', 'Mergulho Triceps'],
+  'Gluteo Maquina': ['Gluteo Maq.', 'Gluteo Maq'],
+  'Cross Over (Gluteo)': ['Cross Over Gluteo'],
+  'Coice com Tornozeleira': ['Tornozeleira', 'Coice na Polia'],
+  Prancha: ['Camcha'],
+  'Leg Press (Quadriceps)': ['Leg Press', 'Leg Press 45'],
+  'Leg Press (Panturrilha)': ['Leg Press Panturrilha', 'Panturrilha no Leg Press'],
+  'Aducao Tornozeleira': ['Aducao com Tornozeleira', 'Adutor na Polia'],
+  'Abdominal Reto': ['Reto'],
+  'Abdominal Obliquo': ['Obliquo'],
+  'Abdominal Infra Solo': ['Infra Solo', 'Abdominal Infra'],
+  Agachamento: ['Agachamento Livre'],
+  'Agachamento Maquina': ['Agachamento Maq.', 'Agachamento no Smith'],
+  'Avanco Passada': ['Passada'],
+  'Bom Dia': ['Good Morning'],
+  'Pulley Frontal': ['Puxada Frente', 'Pulldown na Polia'],
+  'Pulley Inverso': ['Puxada Triangulo', 'Pulley Invertido'],
+  'Remada Maquina': ['Remada Maq.'],
+  'Remada Articulada': ['Remada Articulada Maquina'],
+  'Graviton Cavalinho': ['Remada Cavalinho', 'Cavalinho'],
+  'Desenvolvimento Smith Frente': ['Desenv. Smith Frente', 'Desenvolvimento no Smith'],
+  'Desenvolvimento Articulado': ['Desenv. Articulado'],
+  'Desenvolvimento Halter': ['Desenv. Halter', 'Desenvolvimento com Halteres'],
+  'Elevacao Frontal Cabo': ['Elevacao Frontal no Cabo'],
+  'Elevacao Lateral Cabo': ['Elevacao Lateral no Cabo'],
+  'Supino Vertical': ['Supino Maquina'],
+  'Crucifixo Reto': ['Crucifixo'],
+  'Cross Over (Peito)': ['Cross Over', 'Crossover', 'Cross Over Peito'],
+  'Pull Over': ['Pullover'],
+  Manguito: ['Manguito Rotador'],
+  'Rosca Punho': ['Rosca de Punho'],
+  'Rosca Inversa': ['Rosca de Punho Inversa'],
+  'Cadeira Abdutora': ['Abducao de Quadril'],
+}
+
+const EXERCISE_CATALOG_ENTRIES: ExerciseCatalogEntry[] = EXERCISE_GROUPS.flatMap((group) =>
+  group.exercises.map((exerciseName) => ({
+    exerciseName,
+    muscle: group.muscle,
+  })),
 )
 
+const EXERCISE_ENTRY_LOOKUP = new Map<string, ExerciseCatalogEntry>()
+
+const addLookupValue = (value: string, entry: ExerciseCatalogEntry): void => {
+  const key = normalizeExerciseName(value)
+  if (!key || EXERCISE_ENTRY_LOOKUP.has(key)) {
+    return
+  }
+
+  EXERCISE_ENTRY_LOOKUP.set(key, entry)
+}
+
+for (const entry of EXERCISE_CATALOG_ENTRIES) {
+  addLookupValue(entry.exerciseName, entry)
+
+  const aliases = EXERCISE_NAME_ALIASES[entry.exerciseName] ?? []
+  for (const alias of aliases) {
+    addLookupValue(alias, entry)
+  }
+}
+
+export const ALL_EXERCISES = EXERCISE_CATALOG_ENTRIES.map((entry) => entry.exerciseName)
+
 export const MUSCLE_GROUPS = EXERCISE_GROUPS.map((group) => group.muscle)
+
+export const resolveExerciseCatalogEntry = (exerciseName: string): ExerciseCatalogEntry | null =>
+  EXERCISE_ENTRY_LOOKUP.get(normalizeExerciseName(exerciseName)) ?? null

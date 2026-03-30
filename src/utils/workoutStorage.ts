@@ -1,5 +1,6 @@
 import type { Exercise, Workout } from '../types/workout'
 import type { WorkoutBuilderState } from '../state/workoutBuilderReducer'
+import { resolveExerciseCatalogEntry } from '../data/exerciseCatalog'
 
 export type WorkoutBuilderStorageState = WorkoutBuilderState
 
@@ -12,22 +13,33 @@ const toStringValue = (value: unknown): string => (typeof value === 'string' ? v
 const toNumberValue = (value: unknown, fallback = 0): number =>
   typeof value === 'number' && Number.isFinite(value) ? value : fallback
 
+const normalizeExerciseName = (value: string): string =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
 const normalizeExercise = (raw: unknown): Exercise | null => {
   if (!isRecord(raw)) {
     return null
   }
 
   const id = toStringValue(raw.id)
-  const name = toStringValue(raw.name)
+  const rawName = toStringValue(raw.name)
+  const resolvedEntry = resolveExerciseCatalogEntry(rawName)
+  const name = resolvedEntry?.exerciseName ?? ''
 
-  if (!id || !name) {
+  if (!id || !name || !resolvedEntry) {
     return null
   }
 
   return {
     id,
     name,
-    muscle: toStringValue(raw.muscle),
+    muscle: resolvedEntry.muscle,
     equip: toStringValue(raw.equip),
     sets: toNumberValue(raw.sets, 4),
     reps: toNumberValue(raw.reps, 12),
@@ -52,9 +64,21 @@ const normalizeWorkout = (raw: unknown): Workout | null => {
   }
 
   const muscles = Array.isArray(raw.muscles) ? raw.muscles.map(toStringValue).filter(Boolean) : []
-  const exercises = Array.isArray(raw.exercises)
+  const rawExercises = Array.isArray(raw.exercises)
     ? raw.exercises.map(normalizeExercise).filter((exercise): exercise is Exercise => Boolean(exercise))
     : []
+
+  const exercises: Exercise[] = []
+  const usedNames = new Set<string>()
+  for (const exercise of rawExercises) {
+    const key = normalizeExerciseName(exercise.name)
+    if (!key || usedNames.has(key)) {
+      continue
+    }
+
+    usedNames.add(key)
+    exercises.push(exercise)
+  }
 
   return {
     id,

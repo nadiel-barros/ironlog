@@ -36,7 +36,7 @@ export const createSeedWorkouts = (): Workout[] => [
       },
       {
         id: uid(),
-        name: 'Crucifixo',
+        name: 'Crucifixo Reto',
         muscle: 'Peito',
         equip: 'Cabo',
         sets: 3,
@@ -60,7 +60,7 @@ export const createSeedWorkouts = (): Workout[] => [
       },
       {
         id: uid(),
-        name: 'Mergulho Triceps',
+        name: 'Triceps Corda',
         muscle: 'Triceps',
         equip: 'Calistenia',
         sets: 3,
@@ -106,7 +106,7 @@ export const createSeedWorkouts = (): Workout[] => [
       },
       {
         id: uid(),
-        name: 'Rosca Direta',
+        name: 'Rosca Scott',
         muscle: 'Biceps',
         equip: 'Barra',
         sets: 3,
@@ -140,7 +140,7 @@ export const createSeedWorkouts = (): Workout[] => [
     exercises: [
       {
         id: uid(),
-        name: 'Agachamento Livre',
+        name: 'Agachamento',
         muscle: 'Quadriceps',
         equip: 'Barra',
         sets: 5,
@@ -152,7 +152,7 @@ export const createSeedWorkouts = (): Workout[] => [
       },
       {
         id: uid(),
-        name: 'Leg Press 45',
+        name: 'Leg Press (Quadriceps)',
         muscle: 'Quadriceps',
         equip: 'Maquina',
         sets: 4,
@@ -176,7 +176,7 @@ export const createSeedWorkouts = (): Workout[] => [
       },
       {
         id: uid(),
-        name: 'Extensora',
+        name: 'Cadeira Extensora',
         muscle: 'Quadriceps',
         equip: 'Maquina',
         sets: 3,
