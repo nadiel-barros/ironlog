@@ -1,7 +1,9 @@
 ﻿import { WorkoutBuilderPage } from './pages/WorkoutBuilderPage'
 
 function App() {
-  return <WorkoutBuilderPage />
+
+  return <WorkoutBuilderPage/>
+
 }
 
 export default App
