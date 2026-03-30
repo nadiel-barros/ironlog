@@ -246,6 +246,10 @@
   font-style: italic;
 }
 
+.expand-indicator {
+  display: none;
+}
+
 .exercise-controls {
   display: flex;
   align-items: center;
@@ -524,11 +528,54 @@
   }
 
   .exercise-summary {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.75rem;
   }
 
   .exercise-num {
-    text-align: left;
+    display: none;
+  }
+
+  .drag-handle {
+    display: none;
+  }
+
+  .expand-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .expand-indicator.expanded {
+    transform: rotate(180deg);
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+
+  .exercise-summary .exercise-name {
+    margin-bottom: 0;
+  }
+
+  .exercise-summary .exercise-controls {
+    grid-column: 1 / -1;
+  }
+
+  .exercise-summary:not(.expanded) .exercise-tags,
+  .exercise-summary:not(.expanded) .exercise-note,
+  .exercise-summary:not(.expanded) .exercise-controls {
+    display: none;
   }
 
   .exercise-controls {

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import type { Exercise, Workout } from '../../types/workout'
 import { getExerciseVideoByName } from '../../utils/exerciseVideo'
 import { formatRest } from '../../utils/workout'
@@ -21,11 +21,15 @@ export function WorkoutDetail({
   onReorderExercises,
   onToggleExerciseDone,
 }: WorkoutDetailProps) {
-  const [expandedExercises, setExpandedExercises] = useState<Record<string, boolean>>({})
+  const [expandedExerciseId, setExpandedExerciseId] = useState<string | null>(null)
   const [draggedExerciseId, setDraggedExerciseId] = useState<string | null>(null)
   const [dragOverExerciseId, setDragOverExerciseId] = useState<string | null>(null)
   const [loadedVideos, setLoadedVideos] = useState<Record<string, boolean>>({})
   const [failedVideos, setFailedVideos] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    setExpandedExerciseId(null)
+  }, [workout?.id])
 
   if (!workout) {
     return (
@@ -49,14 +53,8 @@ export function WorkoutDetail({
 
   const getExerciseKey = (exerciseId: string): string => `${workout.id}:${exerciseId}`
 
-  const toggleExpanded = (exerciseId: string) => {
-    const key = getExerciseKey(exerciseId)
-
-    setExpandedExercises((previous) => ({
-      ...previous,
-      [key]: !previous[key],
-    }))
-  }
+  const toggleExpanded = (exerciseId: string) =>
+    setExpandedExerciseId((current) => (current === exerciseId ? null : exerciseId))
 
   const loadVideo = (exerciseId: string) => {
     const key = getExerciseKey(exerciseId)
@@ -126,7 +124,7 @@ export function WorkoutDetail({
           workout.exercises.map((exercise, index) => {
             const video = getExerciseVideoByName(exercise.name)
             const key = getExerciseKey(exercise.id)
-            const isExpanded = !!expandedExercises[key]
+            const isExpanded = expandedExerciseId === exercise.id
             const isDone = exercise.done
             const isDragOver = dragOverExerciseId === exercise.id
             const isVideoLoaded = !!loadedVideos[key]
@@ -154,7 +152,7 @@ export function WorkoutDetail({
                 }}
               >
                 <div
-                  className="exercise-summary"
+                  className={`exercise-summary ${isExpanded ? 'expanded' : ''}`}
                   role="button"
                   tabIndex={0}
                   aria-expanded={isExpanded}
@@ -203,6 +201,10 @@ export function WorkoutDetail({
                     </div>
 
                     {exercise.notes ? <div className="exercise-note">{exercise.notes}</div> : null}
+                  </div>
+
+                  <div className={`expand-indicator ${isExpanded ? 'expanded' : ''}`} aria-hidden="true">
+                    ▾
                   </div>
 
                   <div className="exercise-controls">
@@ -319,3 +321,4 @@ export function WorkoutDetail({
     </div>
   )
 }
+
